@@ -165,6 +165,8 @@
 					mkdir -m 1777 tmp
 					mkdir usr
 					ln -s /bin usr/bin
+					ln -s /include usr/include
+					ln -s /lib usr/lib
 				'';
 
 				copyToRoot = pkgs.buildEnv {
@@ -173,18 +175,23 @@
 						pkgs.bashInteractive
 						pkgs.coreutils
 						pkgs.gnugrep
-						pkgs.vim-full
+						pkgs.vim
 						pkgs.which
 						klee
 						clang
 						# pkgs.gllvm  # the gllvm package does not currently build successfully
 						pkgs.wllvm
 					];
-					pathsToLink = [ "/bin" ];
+					pathsToLink = [ "/bin" "/include" "/lib" ];
 				};
 
 				config = {
 					Entrypoint = "/bin/bash";
+					Env = [
+						# this should really be implemented as a wrapper, so that it also works in a nix shell
+						"LLVM_COMPILER=clang"
+						"LLVM_COMPILER_PATH=${clang}/bin"
+					];
 				};
 			};
 
