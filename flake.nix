@@ -80,6 +80,7 @@
 
 			makeFlags = ["HAVE_DOT_CONFIG=y"];
 		};
+		kleePythonEnv = (pkgs.python3.withPackages (ps: with ps; [ tabulate ]));
 		klee = pkgs.stdenv.mkDerivation {
 			pname = "KLEE";
 			version = "3.1";
@@ -94,21 +95,19 @@
 				pkgs.cryptominisat
 				pkgs.gperftools
 				pkgs.gtest
-				pkgs.lit
 				llvm
 				pkgs.mold
 				pkgs.ninja
 				pkgs.sqlite
 				pkgs.stp
 				pkgs.z3
+
+				kleePythonEnv
+				(pkgs.lit.override { python = kleePythonEnv; })
 			];
 			buildInputs = [
-				(pkgs.python3.withPackages (ps: with ps; [ tabulate ]))
 			];
 			nativeCheckInputs = [
-				pkgs.gtest
-				pkgs.lit
-				(pkgs.python3.withPackages (ps: with ps; [ tabulate ]))
 			];
 
 			cmakeBuildType = "Release";
@@ -135,7 +134,7 @@
 			'';
 
 			checkPhase = ''
-				ninja unittests systemtests 
+				ninja unittests systemtests
 			'';
 			doCheck = true;
 		};
@@ -175,6 +174,8 @@
 					Entrypoint = "/bin/sh";
 				};
 			};
+
+			kleePythonEnv = kleePythonEnv;
 
 			default = pkgs.symlinkJoin {
 				name = "klee-full";
