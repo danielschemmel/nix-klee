@@ -176,9 +176,8 @@
 						pkgs.vim-full
 						pkgs.which
 						klee
-						kleePythonEnv  # klee-stats does not find tabulate otherwise
 						clang
-						#pkgs.gllvm
+						# pkgs.gllvm  # the gllvm package does not currently build successfully
 						pkgs.wllvm
 					];
 					pathsToLink = [ "/bin" ];
@@ -196,7 +195,7 @@
 				paths = [
 					klee
 					clang
-					#pkgs.gllvm
+					# pkgs.gllvm  # the gllvm package does not currently build successfully
 					pkgs.wllvm
 				];
 			};
