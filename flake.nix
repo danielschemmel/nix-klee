@@ -85,12 +85,14 @@
 			pname = "KLEE";
 			version = "3.2-pre";
 			src = builtins.fetchGit {
-				url = "https://github.com/danielschemmel/klee";
-				ref = "pythonpath";
-				rev = "31bcfaa8306903c4296d0b51e0e09e1fe6059498";
+				url = "https://github.com/klee/klee";
+				ref = "master";
+				rev = "a8648707f29e5839d64675c43fa7d244b162bc63";
 			};
 
 			nativeBuildInputs = [
+				kleePythonEnv  # keep at the very top to ensure that it goes first in the `PATH` no other pythons overwrite it...
+
 				clang
 				pkgs.cmake
 				pkgs.cryptominisat
@@ -103,8 +105,8 @@
 				pkgs.sqlite
 				pkgs.stp
 				pkgs.z3
-
-				kleePythonEnv
+			];
+			buildInputs = [
 			];
 			nativeCheckInputs = [
 			];
@@ -159,7 +161,11 @@
 				name = "kleenix";
 				tag = "latest";
 
-				extraCommands = "mkdir -m 1777 tmp";
+				extraCommands = ''
+					mkdir -m 1777 tmp
+					mkdir usr
+					ln -s /bin usr/bin
+				'';
 
 				copyToRoot = pkgs.buildEnv {
 					name = "image-root";
@@ -170,17 +176,16 @@
 						pkgs.vim-full
 						pkgs.which
 						klee
+						kleePythonEnv  # klee-stats does not find tabulate otherwise
 						clang
 						#pkgs.gllvm
 						pkgs.wllvm
-
-						pkgs.ncdu
 					];
 					pathsToLink = [ "/bin" ];
 				};
 
 				config = {
-					Entrypoint = "/bin/sh";
+					Entrypoint = "/bin/bash";
 				};
 			};
 
