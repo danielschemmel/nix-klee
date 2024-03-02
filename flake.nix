@@ -97,16 +97,14 @@
 				pkgs.gperftools
 				pkgs.gtest
 				llvm
-				pkgs.mold
+				pkgs.lit
+				# pkgs.mold  # I cannot figure out how to build the project successfully using mold
 				pkgs.ninja
 				pkgs.sqlite
 				pkgs.stp
 				pkgs.z3
 
 				kleePythonEnv
-				(pkgs.lit.override { python = kleePythonEnv; })
-			];
-			buildInputs = [
 			];
 			nativeCheckInputs = [
 			];
@@ -115,7 +113,8 @@
 			cmakeFlags = [
 				"-GNinja"
 				"-DCMAKE_INTERPROCEDURAL_OPTIMIZATION=ON"
-				# "-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=mold"
+				"-DCMAKE_EXE_LINKER_FLAGS=-fuse-ld=gold"
+				"-DCMAKE_SHARED_LINKER_FLAGS=-fuse-ld=gold"
 				# KLEE will pick up LLVM from `llvm-config` (part of pkgs.llvm), but it will by default try to find clang
 				# relative to that path, so we have to pass the clang paths explicitly.
 				"-DLLVMCC=${clang}/bin/clang"
@@ -168,6 +167,7 @@
 						pkgs.bashInteractive
 						pkgs.coreutils
 						pkgs.gnugrep
+						pkgs.vim-full
 						pkgs.which
 						klee
 						clang
