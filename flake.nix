@@ -128,14 +128,22 @@
 				"-DKLEE_UCLIBC_PATH=${klee-uclibc}"
 			];
 
-			#buildPhase = "ninja -j $NIX_BUILD_CORES";
-
 			prePatch = ''
 				patchShebangs .
 			'';
 
+			#buildPhase = ''
+			#	ninja -j $NIX_BUILD_CORES
+			#'';
+
+			#installPhase = ''
+			#	ninja -j $NIX_BUILD_CORES install
+			#'';
+
+			hardeningDisable = [ "fortify" ];
+
 			checkPhase = ''
-				ninja unittests systemtests
+				ninja -j $NIX_BUILD_CORES unittests systemtests
 			'';
 			doCheck = true;
 		};
