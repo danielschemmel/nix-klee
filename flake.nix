@@ -83,10 +83,11 @@
 		kleePythonEnv = (pkgs.python3.withPackages (ps: with ps; [ tabulate ]));
 		klee = pkgs.stdenv.mkDerivation {
 			pname = "KLEE";
-			version = "3.1";
+			version = "3.2-pre";
 			src = builtins.fetchGit {
-				url = "https://github.com/klee/klee";
-				rev = "fe22b90764887ab69c20b1eccd773d47a8378b95";
+				url = "https://github.com/danielschemmel/klee";
+				ref = "pythonpath";
+				rev = "31bcfaa8306903c4296d0b51e0e09e1fe6059498";
 			};
 
 			nativeBuildInputs = [
